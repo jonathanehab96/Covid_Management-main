@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    
+    <head>
+        {% load static %}
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Modern Home Page</title>
+<!--        <link href="home.css" rel="stylesheet">-->
+        <link rel="stylesheet" href="{% static 'css/stylee.css' %}" />
+    </head>
+    <!-- hhh -->
+    
+    <body class="home">
+        <header class="header">
+            <div class="container">
+                <nav class="header-navigation" aria-label="navigation">
+                    <ul>
+                        <li><a href="{% url 'register' %}" class="btn">Register</a></li>
+<!--                        <li><a href="{% url 'view_commits' %}" class="btn">Add Commit</a></li>-->
+                        {% if not request.user.profile.is_doctor %}
+                        <li><a href="{% url 'view_commits' %}" class="btn">Add Commit</a></li>
+                        <li><a href="{% url 'calculate_risk' %}" class="btn">Risk Calculator</a></li>
+                        {% comment %} <li><a href="{% url 'user_profile' user_id=request.user.id %}" class="btn">User Profile</a></li> {% endcomment %}
+                        {% comment %} <li><a href="{% url 'feedback' user_id=request.user.id %}" class="btn">Feedback</a></li> {% endcomment %}
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'profile' user_id=user.id %}" class="btn">Profile</a></li>
+                        {% endif %}
+                        {% endif %}
+                          {% if user.is_authenticated %}
+<!--                            <a href="{% url 'logout' %}">Logout</a>-->
+                        {% else %}
+                            <a href="{% url 'login' %}">Login</a>
+                            <a href="{% url 'register' %}">Register</a>
+                        {% endif %}
+                        {% if request.user.profile.is_doctor %}
+                        <li><a href="{% url 'all_users' %}" class="btn"> Patients</a></li>
+                    {% endif %}
+        </ul>
+        <ul>
+            {% if user.username %}
+            <p>Welcome, {{ user.username }}!</p>
+            {% else %}
+            <li><a href="{% url 'register' %}">Sign Up</a></li>
+            <li><a href="{% url 'login' %}">Sign In</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+</header>
+<section class="section-image">
+    <div class="slider-container">
+<!--        <div class="slide"><img src="electrocardiogram-6821777_1280.jpg" alt="Photo1"></div>-->
+<!--        <div class="slide1"><img src="corona-5090488_1280.jpg" alt="Photo2"></div>-->
+<!--        <div class="slide2"><img src="istockphoto-1352253374-1024x1024.jpg" alt="Photo4"></div>-->
+<!--        <div class="slide3"><img src="istockphoto-1490988364-612x612.jpg" alt="Photo3"></div>-->
+<!--        <div class="slide4"><img src="ecg-1953179_1280.jpg" alt="Photo5"></div>-->
+    </div>
+</section>
+<section class="section-title">
+    <div class="container">
+        <h2>Detection of COVID-19 and Cardiovascular Diseases By Deep Learning</h2>
+        {% comment %} <a href="{% url 'calculate_risk' %}" class="btn">Go to Risk Calculator</a> {% endcomment %}
+        {% comment %} <a href="{% url 'profile' %}" class="btn">View Profile</a>  <!-- Added profile link --> {% endcomment %}
+        {% comment %} <p>Click below to upload an image:</p> {% endcomment %}
+        {% comment %} <a href="{% url 'image_upload' %}">Upload Image</a> {% endcomment %}
+    </div>
+  </section>
+                                {% if not request.user.profile.is_doctor %}
+  <section class="section-upload">
+    <div class="upload-container">
+        {% if existing_image %}
+            <form id="updateForm" action="{% url 'image_update' image_id=existing_image.pk %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="image" id="file" accept="image/*" hidden>
+                <div class="img-area" data-img>
+                    <i class='bx bxs-cloud-upload bx-fade-up'></i>
+                    <h3>Upload Image</h3>
+                    <p>Image size must be less than <span>2MB</span></p>
+                </div>
+                <div class="select">
+                    <button id="updateButton" type="submit" class="submit">Update Image</button>
+                </div>
+            </form>
+            <div class="select" style="display: none;">
+                <button id="selectImage" type="button" class="select-image">
+                    <i class="ri-image-line"></i>
+                    Click here to upload image
+                </button>
+            </div>
+        {% else %}
+            <form id="uploadForm" action="{% url 'image_upload' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="image" id="file" accept="image/*" hidden>
+                <div class="img-area" data-img>
+                    <i class='bx bxs-cloud-upload bx-fade-up'></i>
+                    <h3>Upload Image</h3>
+                    <p>Image size must be less than <span>2MB</span></p>
+                </div>
+                <div class="select">
+                    <button id="selectImage" type="button" class="select-image">
+                        <i class="ri-image-line"></i>
+                        Click here to upload image
+                    </button>
+                </div>
+                <div class="select">
+                    <button id="sendButton" type="submit" class="submit">Submit</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</section>
+        {% endif %}
+
+</section>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="upload.js"></script>
+    <script src="{% static 'css/js/upload.js' %}"></script>
+    <script src="{% static 'css/js/home.js' %}"></script>
+</body>
+
+</html>
